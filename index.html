@@ -521,7 +521,7 @@
                         <td class="shop-name">${r.shop}</td>
                         <td>${r.prev.toLocaleString()}</td>
                         <td>${r.curr.toLocaleString()}</td>
-                        <td>${r.usage.toLocaleString()}</td>
+                        <td>${r.usage}</td>
                         <td class="amount">${r.amount.toLocaleString()}원</td>
                     </tr>`;
             });
@@ -531,7 +531,7 @@
                     <td class="shop-name">합계</td>
                     <td></td>
                     <td></td>
-                    <td>${totalUsage.toLocaleString()}</td>
+                    <td>${totalUsage}</td>
                     <td class="amount">${totalAmount.toLocaleString()}원</td>
                 </tr>`;
 
