@@ -178,6 +178,10 @@
             color: var(--text-main);
             transition: background 0.25s, border-color 0.2s;
         }
+        .shop-table input.prev-input {
+            background: var(--bg-row-even);
+            color: var(--text-th);
+        }
         .shop-table input:focus {
             outline: none;
             border-color: var(--accent);
@@ -188,8 +192,11 @@
         .btn-row {
             display: flex;
             gap: 10px;
-            margin-top: 16px;
+            margin-top: 10px;
             flex-wrap: wrap;
+        }
+        .btn-row-calc {
+            margin-top: 16px;
         }
         .btn {
             padding: 10px 20px;
@@ -238,8 +245,7 @@
         }
         .result-table .shop-name {
             font-weight: 600;
-            text-align: left;
-            padding-left: 10px;
+            text-align: center;
         }
         .result-table tr:nth-child(even) { background: var(--bg-row-even); }
         .result-table .total-row {
@@ -252,6 +258,11 @@
             font-size: 1.2rem;
         }
         .hidden { display: none; }
+
+        /* ── 결과 카드 강조 ── */
+        #resultCard {
+            border: 2px solid var(--accent);
+        }
 
         /* ── 이력 ── */
         .history-item {
@@ -320,8 +331,10 @@
             </thead>
             <tbody id="shopInputs"></tbody>
         </table>
-        <div class="btn-row">
+        <div class="btn-row btn-row-calc">
             <button class="btn btn-primary" onclick="calculate()">계산하기</button>
+        </div>
+        <div class="btn-row">
             <button class="btn btn-secondary" onclick="toggleHistory()">이력 보기</button>
             <button class="btn btn-danger" onclick="resetAll()">초기화</button>
         </div>
@@ -343,7 +356,7 @@
             <tbody id="resultBody"></tbody>
         </table>
         <div class="btn-row" style="margin-top:12px;">
-            <button class="btn btn-secondary" onclick="saveAndApply()">저장 (다음 달 이전 수치로 적용)</button>
+            <button class="btn btn-secondary" onclick="saveAndApply()">저장하고 다음달 적용</button>
         </div>
     </div>
 
@@ -440,8 +453,8 @@
             tbody.innerHTML = SHOPS.map(shop => `
                 <tr>
                     <td class="shop-name">${shop}</td>
-                    <td><input type="number" id="prev_${shop}" value="${prev[shop] || ''}" placeholder="${shop}" min="0" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
-                    <td><input type="number" id="curr_${shop}" placeholder="${shop}" min="0" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
+                    <td><input type="number" id="prev_${shop}" value="${prev[shop] || ''}" placeholder="0" min="0" step="1" class="prev-input" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
+                    <td><input type="number" id="curr_${shop}" placeholder="0" min="0" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
                 </tr>
             `).join('');
         }
