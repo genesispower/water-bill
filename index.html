@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수도세 계산기</title>
+    <style>
+        /* ── CSS 변수 (라이트 모드) ── */
+        :root {
+            --bg-page:       #f0f4f8;
+            --bg-card:       #ffffff;
+            --bg-table-head: #f0f4f8;
+            --bg-row-even:   #f8fafc;
+            --bg-total-row:  #e8f0fe;
+            --bg-history-span: #f8fafc;
+            --bg-btn-sec:    #e8edf2;
+            --bg-btn-sec-hover: #d0d7de;
+            --bg-btn-danger: #ffffff;
+            --text-main:     #333333;
+            --text-sub:      #444444;
+            --text-th:       #555555;
+            --text-btn-sec:  #555555;
+            --border-card:   transparent;
+            --border-table:  #d0d7de;
+            --border-row:    #eeeeee;
+            --border-card-h2: #e8edf2;
+            --border-history: #e8edf2;
+            --shadow-card:   0 2px 8px rgba(0,0,0,0.08);
+            --accent:        #1a73e8;
+            --accent-dark:   #1557b0;
+            --danger:        #d93025;
+            --danger-bg-hover: #fce8e6;
+            --toggle-icon:   '🌙';
+        }
+
+        /* ── CSS 변수 (다크 모드) ── */
+        [data-theme="dark"] {
+            --bg-page:       #0f1117;
+            --bg-card:       #1e2130;
+            --bg-table-head: #252a3a;
+            --bg-row-even:   #252a3a;
+            --bg-total-row:  #1a2a4a;
+            --bg-history-span: #252a3a;
+            --bg-btn-sec:    #2c3248;
+            --bg-btn-sec-hover: #363d56;
+            --bg-btn-danger: #1e2130;
+            --text-main:     #e0e6f0;
+            --text-sub:      #c0c8d8;
+            --text-th:       #a0aabf;
+            --text-btn-sec:  #a0aabf;
+            --border-card:   #2c3248;
+            --border-table:  #3a4260;
+            --border-row:    #2c3248;
+            --border-card-h2: #2c3248;
+            --border-history: #2c3248;
+            --shadow-card:   0 2px 12px rgba(0,0,0,0.35);
+            --accent:        #4d9ef7;
+            --accent-dark:   #76b5fa;
+            --danger:        #f28b82;
+            --danger-bg-hover: #3a1e1c;
+            --toggle-icon:   '☀️';
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', '맑은 고딕', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            padding: 16px;
+            max-width: 720px;
+            margin: 0 auto;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        /* ── 헤더 ── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+        #themeToggle {
+            position: absolute;
+            right: 0;
+            background: var(--bg-btn-sec);
+            border: 1.5px solid var(--border-table);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: background 0.2s;
+        }
+        #themeToggle:hover { background: var(--bg-btn-sec-hover); }
+
+        /* ── 카드 ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            transition: background 0.25s, border-color 0.25s;
+        }
+        .card h2 {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 14px;
+            border-bottom: 2px solid var(--border-card-h2);
+            padding-bottom: 8px;
+        }
+
+        /* ── 통합 금액 ── */
+        .total-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .total-input label { font-weight: 600; white-space: nowrap; }
+        .total-input input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid var(--border-table);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: right;
+            background: var(--bg-card);
+            color: var(--text-main);
+            transition: background 0.25s, border-color 0.2s;
+        }
+        .total-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(77,158,247,0.2);
+        }
+        .total-input span { font-weight: 600; }
+
+        /* ── 입력 테이블 ── */
+        .shop-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .shop-table th {
+            background: var(--bg-table-head);
+            padding: 8px 6px;
+            font-size: 0.85rem;
+            color: var(--text-th);
+            text-align: center;
+            border-bottom: 2px solid var(--border-table);
+        }
+        .shop-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-row);
+        }
+        .shop-table .shop-name {
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .shop-table input {
+            width: 100%;
+            max-width: 100px;
+            padding: 6px 8px;
+            border: 1.5px solid var(--border-table);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            text-align: right;
+            background: var(--bg-card);
+            color: var(--text-main);
+            transition: background 0.25s, border-color 0.2s;
+        }
+        .shop-table input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(77,158,247,0.2);
+        }
+
+        /* ── 버튼 ── */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            flex: 1;
+        }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-secondary {
+            background: var(--bg-btn-sec);
+            color: var(--text-btn-sec);
+        }
+        .btn-secondary:hover { background: var(--bg-btn-sec-hover); }
+        .btn-danger {
+            background: var(--bg-btn-danger);
+            color: var(--danger);
+            border: 1.5px solid var(--danger);
+        }
+        .btn-danger:hover { background: var(--danger-bg-hover); }
+
+        /* ── 결과 테이블 ── */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .result-table th {
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 6px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .result-table td {
+            padding: 10px 6px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-row);
+        }
+        .result-table .shop-name {
+            font-weight: 600;
+            text-align: left;
+            padding-left: 10px;
+        }
+        .result-table tr:nth-child(even) { background: var(--bg-row-even); }
+        .result-table .total-row {
+            background: var(--bg-total-row) !important;
+            font-weight: 700;
+        }
+        .result-table .amount {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .hidden { display: none; }
+
+        /* ── 이력 ── */
+        .history-item {
+            padding: 12px;
+            border: 1px solid var(--border-history);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .history-item .date {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+        .history-detail {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 4px;
+        }
+        .history-detail span {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 6px;
+            background: var(--bg-history-span);
+            border-radius: 4px;
+        }
+        .no-history { color: var(--text-th); text-align: center; padding: 20px; }
+
+        /* ── 반응형 ── */
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.3rem; }
+            .shop-table input { max-width: 80px; font-size: 0.85rem; padding: 5px 4px; }
+            .shop-table th, .shop-table td { padding: 6px 2px; font-size: 0.8rem; }
+            .result-table th, .result-table td { padding: 8px 3px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>수도세 계산기</h1>
+        <button id="themeToggle" onclick="toggleTheme()" title="다크/라이트 모드 전환">🌙</button>
+    </div>
+
+    <!-- 통합 금액 입력 -->
+    <div class="card">
+        <h2>통합 수도세</h2>
+        <div class="total-input">
+            <label for="totalBill">납부 금액</label>
+            <input type="number" id="totalBill" placeholder="0" min="0">
+            <span>원</span>
+        </div>
+    </div>
+
+    <!-- 업소별 계량기 입력 -->
+    <div class="card">
+        <h2>업소별 계량기 수치</h2>
+        <table class="shop-table">
+            <thead>
+                <tr>
+                    <th>업소명</th>
+                    <th id="thPrevMonth"></th>
+                    <th id="thCurrMonth"></th>
+                </tr>
+            </thead>
+            <tbody id="shopInputs"></tbody>
+        </table>
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="calculate()">계산하기</button>
+            <button class="btn btn-secondary" onclick="toggleHistory()">이력 보기</button>
+            <button class="btn btn-danger" onclick="resetAll()">초기화</button>
+        </div>
+    </div>
+
+    <!-- 계산 결과 -->
+    <div class="card hidden" id="resultCard">
+        <h2>계산 결과</h2>
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>업소명</th>
+                    <th id="resPrevMonth"></th>
+                    <th id="resCurrMonth"></th>
+                    <th>사용량</th>
+                    <th>비율</th>
+                    <th>부담금</th>
+                </tr>
+            </thead>
+            <tbody id="resultBody"></tbody>
+        </table>
+        <div class="btn-row" style="margin-top:12px;">
+            <button class="btn btn-secondary" onclick="saveAndApply()">저장 (다음 달 이전 수치로 적용)</button>
+        </div>
+    </div>
+
+    <!-- 이력 -->
+    <div class="card hidden" id="historyCard">
+        <h2>계산 이력</h2>
+        <div id="historyList"></div>
+        <div class="btn-row" style="margin-top:10px;">
+            <button class="btn btn-danger" onclick="clearHistory()">이력 전체 삭제</button>
+        </div>
+    </div>
+
+    <script>
+        const SHOPS = ['이조갈비', '뽑기', '참치', '따개', '송자네', '또래오래'];
+        const STORAGE_KEY = 'waterBill_prevReadings';
+        const HISTORY_KEY = 'waterBill_history';
+        const THEME_KEY   = 'waterBill_theme';
+
+        // ── 다크/라이트 모드 ──
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem(THEME_KEY, theme);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        // 저장된 테마 또는 시스템 설정 적용
+        (function initTheme() {
+            const saved = localStorage.getItem(THEME_KEY);
+            if (saved) {
+                applyTheme(saved);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                applyTheme('dark');
+            }
+        })();
+
+        // ── 현재/이전 달 이름 반환 ──
+        function getMonthLabels() {
+            const now = new Date();
+            const curr = now.getMonth() + 1;
+            const prev = curr === 1 ? 12 : curr - 1;
+            return { prev: `${prev}월분 사용량`, curr: `${curr}월분 사용량` };
+        }
+
+        // ── 이전 달 데이터 로드 ──
+        function loadPrevReadings() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : {};
+        }
+
+        // ── 입력 폼 생성 ──
+        function renderInputs() {
+            const { prev: prevLabel, curr: currLabel } = getMonthLabels();
+            document.getElementById('thPrevMonth').textContent = prevLabel;
+            document.getElementById('thCurrMonth').textContent = currLabel;
+            document.getElementById('resPrevMonth').textContent = prevLabel;
+            document.getElementById('resCurrMonth').textContent = currLabel;
+            const prev = loadPrevReadings();
+            const tbody = document.getElementById('shopInputs');
+            tbody.innerHTML = SHOPS.map(shop => `
+                <tr>
+                    <td class="shop-name">${shop}</td>
+                    <td><input type="number" id="prev_${shop}" value="${prev[shop] || ''}" placeholder="${shop}" min="0" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
+                    <td><input type="number" id="curr_${shop}" placeholder="${shop}" min="0" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
+                </tr>
+            `).join('');
+        }
+
+        // ── 계산 ──
+        function calculate() {
+            const totalBill = parseInt(document.getElementById('totalBill').value) || 0;
+            if (totalBill <= 0) {
+                alert('통합 수도세 금액을 입력하세요.');
+                return;
+            }
+
+            const readings = [];
+            let totalUsage = 0;
+
+            for (const shop of SHOPS) {
+                const prev = parseInt(document.getElementById(`prev_${shop}`).value) || 0;
+                const curr = parseInt(document.getElementById(`curr_${shop}`).value) || 0;
+                const usage = curr - prev;
+
+                if (usage < 0) {
+                    alert(`${shop}: 이번 달 수치가 이전 달보다 작습니다. 확인해주세요.`);
+                    return;
+                }
+
+                readings.push({ shop, prev, curr, usage });
+                totalUsage += usage;
+            }
+
+            if (totalUsage === 0) {
+                alert('전체 사용량이 0입니다. 계량기 수치를 확인하세요.');
+                return;
+            }
+
+            const resultBody = document.getElementById('resultBody');
+            let html = '';
+            let totalAmount = 0;
+
+            readings.forEach(r => {
+                const ratio = r.usage / totalUsage;
+                const amount = Math.round(totalBill * ratio);
+                totalAmount += amount;
+                r.ratio = ratio;
+                r.amount = amount;
+
+                html += `
+                    <tr>
+                        <td class="shop-name">${r.shop}</td>
+                        <td>${r.prev.toLocaleString()}</td>
+                        <td>${r.curr.toLocaleString()}</td>
+                        <td>${r.usage.toLocaleString()}</td>
+                        <td>${(ratio * 100).toFixed(1)}%</td>
+                        <td class="amount">${amount.toLocaleString()}원</td>
+                    </tr>`;
+            });
+
+            // 반올림 차이 보정 (마지막 업소에 적용)
+            const diff = totalBill - totalAmount;
+            if (diff !== 0) {
+                readings[readings.length - 1].amount += diff;
+                totalAmount += diff;
+                const last = readings[readings.length - 1];
+                const rows = html.split('</tr>');
+                rows[rows.length - 2] = `
+                    <tr>
+                        <td class="shop-name">${last.shop}</td>
+                        <td>${last.prev.toLocaleString()}</td>
+                        <td>${last.curr.toLocaleString()}</td>
+                        <td>${last.usage.toLocaleString()}</td>
+                        <td>${(last.ratio * 100).toFixed(1)}%</td>
+                        <td class="amount">${last.amount.toLocaleString()}원</td>
+                    `;
+                html = rows.join('</tr>');
+            }
+
+            html += `
+                <tr class="total-row">
+                    <td class="shop-name">합계</td>
+                    <td></td>
+                    <td></td>
+                    <td>${totalUsage.toLocaleString()}</td>
+                    <td>100%</td>
+                    <td class="amount">${totalAmount.toLocaleString()}원</td>
+                </tr>`;
+
+            resultBody.innerHTML = html;
+            document.getElementById('resultCard').classList.remove('hidden');
+            window._lastCalc = { readings, totalBill, totalUsage };
+        }
+
+        // ── 저장 및 다음 달 이전 수치로 적용 ──
+        function saveAndApply() {
+            if (!window._lastCalc) return;
+
+            const { readings, totalBill, totalUsage } = window._lastCalc;
+
+            const newPrev = {};
+            readings.forEach(r => { newPrev[r.shop] = r.curr; });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newPrev));
+
+            const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            history.unshift({
+                date: new Date().toLocaleDateString('ko-KR'),
+                totalBill,
+                totalUsage,
+                details: readings.map(r => ({
+                    shop: r.shop,
+                    prev: r.prev,
+                    curr: r.curr,
+                    usage: r.usage,
+                    amount: r.amount
+                }))
+            });
+            if (history.length > 12) history.pop();
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+
+            alert('저장되었습니다. 이번 달 수치가 다음 달의 이전 수치로 적용됩니다.');
+            renderInputs();
+        }
+
+        // ── 이력 보기 토글 ──
+        function toggleHistory() {
+            const card = document.getElementById('historyCard');
+            card.classList.toggle('hidden');
+            if (!card.classList.contains('hidden')) {
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            const container = document.getElementById('historyList');
+
+            if (history.length === 0) {
+                container.innerHTML = '<div class="no-history">저장된 이력이 없습니다.</div>';
+                return;
+            }
+
+            container.innerHTML = history.map(h => `
+                <div class="history-item">
+                    <div class="date">${h.date} | 총 ${h.totalBill.toLocaleString()}원 | 사용량 ${h.totalUsage.toLocaleString()}</div>
+                    <div class="history-detail">
+                        ${h.details.map(d => `<span><b>${d.shop}</b> ${d.amount.toLocaleString()}원</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ── 이력 삭제 ──
+        function clearHistory() {
+            if (confirm('계산 이력을 모두 삭제하시겠습니까?')) {
+                localStorage.removeItem(HISTORY_KEY);
+                renderHistory();
+            }
+        }
+
+        // ── 초기화 ──
+        function resetAll() {
+            if (confirm('모든 데이터(이전 수치, 이력)를 초기화하시겠습니까?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(HISTORY_KEY);
+                document.getElementById('totalBill').value = '';
+                document.getElementById('resultCard').classList.add('hidden');
+                document.getElementById('historyCard').classList.add('hidden');
+                renderInputs();
+                alert('초기화되었습니다.');
+            }
+        }
+
+        // ── 초기 렌더링 ──
+        renderInputs();
+    </script>
+</body>
+</html>
