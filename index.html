@@ -301,9 +301,10 @@
         <h2>통합 수도세</h2>
         <div class="total-input">
             <label for="totalBill">납부 금액</label>
-            <input type="number" id="totalBill" placeholder="0" min="0">
+            <input type="text" id="totalBill" placeholder="0" inputmode="numeric" oninput="formatTotalBill(this)">
             <span>원</span>
         </div>
+        <div id="billKorean" style="margin-top:6px; font-size:0.9rem; color:var(--accent); min-height:1.2em; text-align:right;"></div>
     </div>
 
     <!-- 업소별 계량기 입력 -->
@@ -357,6 +358,36 @@
     </div>
 
     <script>
+        function numberToKorean(num) {
+            if (!num || num === 0) return '';
+            const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+            const places = ['', '십', '백', '천'];
+            const units = ['', '만', '억', '조'];
+            function convertGroup(n) {
+                let result = '';
+                const d = [Math.floor(n/1000), Math.floor((n%1000)/100), Math.floor((n%100)/10), n%10];
+                for (let i = 0; i < 4; i++) {
+                    if (d[i] > 0) result += (d[i] === 1 && i < 3 ? '' : digits[d[i]]) + places[3-i];
+                }
+                return result;
+            }
+            const groups = [];
+            let temp = num;
+            while (temp > 0) { groups.push(temp % 10000); temp = Math.floor(temp / 10000); }
+            let result = '';
+            for (let i = groups.length - 1; i >= 0; i--) {
+                if (groups[i] > 0) result += convertGroup(groups[i]) + units[i];
+            }
+            return result + '원';
+        }
+
+        function formatTotalBill(input) {
+            const raw = input.value.replace(/[^0-9]/g, '');
+            const num = raw ? parseInt(raw) : 0;
+            input.value = num ? num.toLocaleString() : '';
+            document.getElementById('billKorean').textContent = num ? numberToKorean(num) : '';
+        }
+
         const SHOPS = ['이조갈비', '뽑기', '참치', '따개', '송자네', '또래오래'];
         const STORAGE_KEY = 'waterBill_prevReadings';
         const HISTORY_KEY = 'waterBill_history';
@@ -418,7 +449,7 @@
 
         // ── 계산 ──
         function calculate() {
-            const totalBill = parseInt(document.getElementById('totalBill').value) || 0;
+            const totalBill = parseInt(document.getElementById('totalBill').value.replace(/,/g, '')) || 0;
             if (totalBill <= 0) {
                 alert('통합 수도세 금액을 입력하세요.');
                 return;
