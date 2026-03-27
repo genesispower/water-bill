@@ -248,8 +248,8 @@
         }
         .result-table .amount {
             color: var(--accent);
-            font-weight: 700;
-            font-size: 1.05rem;
+            font-weight: 800;
+            font-size: 1.2rem;
         }
         .hidden { display: none; }
 
@@ -337,7 +337,6 @@
                     <th id="resPrevMonth"></th>
                     <th id="resCurrMonth"></th>
                     <th>사용량</th>
-                    <th>비율</th>
                     <th>부담금</th>
                 </tr>
             </thead>
@@ -493,7 +492,6 @@
                         <td>${r.prev.toLocaleString()}</td>
                         <td>${r.curr.toLocaleString()}</td>
                         <td>${r.usage.toLocaleString()}</td>
-                        <td>${(r.ratio * 100).toFixed(1)}%</td>
                         <td class="amount">${r.amount.toLocaleString()}원</td>
                     </tr>`;
             });
