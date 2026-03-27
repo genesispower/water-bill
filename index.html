@@ -477,46 +477,34 @@
                 return;
             }
 
-            const resultBody = document.getElementById('resultBody');
-            let html = '';
-            let totalAmount = 0;
-
+            // 최대잉여법: 소수점이 큰 업소 순으로 1원씩 배분
             readings.forEach(r => {
-                const ratio = r.usage / totalUsage;
-                const amount = Math.round(totalBill * ratio);
-                totalAmount += amount;
-                r.ratio = ratio;
-                r.amount = amount;
+                r.ratio = r.usage / totalUsage;
+                const exact = totalBill * r.ratio;
+                r.floor = Math.floor(exact);
+                r.frac  = exact - r.floor;
+                r.amount = r.floor;
+            });
+            let remainder = totalBill - readings.reduce((s, r) => s + r.floor, 0);
+            readings
+                .slice()
+                .sort((a, b) => b.frac - a.frac)
+                .forEach(r => { if (remainder-- > 0) r.amount += 1; });
 
+            let totalAmount = 0;
+            let html = '';
+            readings.forEach(r => {
+                totalAmount += r.amount;
                 html += `
                     <tr>
                         <td class="shop-name">${r.shop}</td>
                         <td>${r.prev.toLocaleString()}</td>
                         <td>${r.curr.toLocaleString()}</td>
                         <td>${r.usage.toLocaleString()}</td>
-                        <td>${(ratio * 100).toFixed(1)}%</td>
-                        <td class="amount">${amount.toLocaleString()}원</td>
+                        <td>${(r.ratio * 100).toFixed(1)}%</td>
+                        <td class="amount">${r.amount.toLocaleString()}원</td>
                     </tr>`;
             });
-
-            // 반올림 차이 보정 (마지막 업소에 적용)
-            const diff = totalBill - totalAmount;
-            if (diff !== 0) {
-                readings[readings.length - 1].amount += diff;
-                totalAmount += diff;
-                const last = readings[readings.length - 1];
-                const rows = html.split('</tr>');
-                rows[rows.length - 2] = `
-                    <tr>
-                        <td class="shop-name">${last.shop}</td>
-                        <td>${last.prev.toLocaleString()}</td>
-                        <td>${last.curr.toLocaleString()}</td>
-                        <td>${last.usage.toLocaleString()}</td>
-                        <td>${(last.ratio * 100).toFixed(1)}%</td>
-                        <td class="amount">${last.amount.toLocaleString()}원</td>
-                    `;
-                html = rows.join('</tr>');
-            }
 
             html += `
                 <tr class="total-row">
