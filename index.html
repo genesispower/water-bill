@@ -477,19 +477,11 @@
                 return;
             }
 
-            // 최대잉여법: 소수점이 큰 업소 순으로 1원씩 배분
+            // 각 업소 독립 반올림 (합계는 실제 청구액과 1~2원 차이 가능)
             readings.forEach(r => {
                 r.ratio = r.usage / totalUsage;
-                const exact = totalBill * r.ratio;
-                r.floor = Math.floor(exact);
-                r.frac  = exact - r.floor;
-                r.amount = r.floor;
+                r.amount = Math.round(totalBill * r.ratio);
             });
-            let remainder = totalBill - readings.reduce((s, r) => s + r.floor, 0);
-            readings
-                .slice()
-                .sort((a, b) => b.frac - a.frac)
-                .forEach(r => { if (remainder-- > 0) r.amount += 1; });
 
             let totalAmount = 0;
             let html = '';
