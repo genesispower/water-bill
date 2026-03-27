@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="light">
+<html lang="ko" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,245 +8,493 @@
     <style>
         /* ── CSS 변수 (라이트 모드) ── */
         :root {
-            --bg-page:       #f0f4f8;
-            --bg-card:       #ffffff;
-            --bg-table-head: #f0f4f8;
-            --bg-row-even:   #f8fafc;
-            --bg-total-row:  #e8f0fe;
-            --bg-history-span: #f8fafc;
-            --bg-btn-sec:    #e8edf2;
-            --bg-btn-sec-hover: #d0d7de;
+            --bg-page: #f3eee5;
+            --bg-page-glow-a: rgba(212, 183, 132, 0.22);
+            --bg-page-glow-b: rgba(125, 95, 55, 0.10);
+            --bg-overlay-top: rgba(255,255,255,0.82);
+            --bg-overlay-wash: rgba(255,248,236,0.52);
+            --bg-card: rgba(255, 251, 246, 0.84);
+            --bg-card-strong: #fffdfa;
+            --bg-table-head: #f4ece2;
+            --bg-row-even: #fcf8f2;
+            --bg-total-row: #f4eadb;
+            --bg-history-span: #f8f1e8;
+            --bg-btn-sec: #f4ede4;
+            --bg-btn-sec-hover: #ebdfd1;
             --bg-btn-danger: #ffffff;
-            --text-main:     #333333;
-            --text-sub:      #444444;
-            --text-th:       #555555;
-            --text-btn-sec:  #555555;
-            --border-card:   transparent;
-            --border-table:  #d0d7de;
-            --border-row:    #eeeeee;
-            --border-card-h2: #e8edf2;
-            --border-history: #e8edf2;
-            --shadow-card:   0 2px 8px rgba(0,0,0,0.08);
-            --accent:        #1a73e8;
-            --accent-dark:   #1557b0;
-            --danger:        #d93025;
-            --danger-bg-hover: #fce8e6;
-            --toggle-icon:   '🌙';
+            --text-main: #201812;
+            --text-sub: #655649;
+            --text-muted: #8b7a69;
+            --text-th: #756453;
+            --text-btn-sec: #4f4032;
+            --border-card: rgba(153, 122, 82, 0.18);
+            --border-table: #e2d5c5;
+            --border-row: #eee4d8;
+            --border-card-h2: #e8dccf;
+            --border-history: #e6dbcf;
+            --shadow-card: 0 26px 70px rgba(78, 57, 35, 0.12);
+            --shadow-soft: 0 14px 34px rgba(78, 57, 35, 0.08);
+            --accent: #8a6840;
+            --accent-dark: #6c5131;
+            --accent-strong: #9e7746;
+            --accent-bright: #c69b61;
+            --danger: #b7651d;
+            --danger-bg-hover: #fff5ec;
+            --focus-ring: rgba(198, 155, 97, 0.16);
+            --metal-line: linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.22) 35%, rgba(198,155,97,0.10) 100%);
+            --hero-sheen: linear-gradient(135deg, rgba(255,255,255,0.64), rgba(255,255,255,0.18) 32%, rgba(198,155,97,0.10) 100%);
+            --pill-bg: rgba(255,255,255,0.66);
+            --pill-border: rgba(198,155,97,0.18);
         }
 
         /* ── CSS 변수 (다크 모드) ── */
         [data-theme="dark"] {
-            --bg-page:       #0f1117;
-            --bg-card:       #1e2130;
-            --bg-table-head: #252a3a;
-            --bg-row-even:   #252a3a;
-            --bg-total-row:  #1a2a4a;
-            --bg-history-span: #252a3a;
-            --bg-btn-sec:    #2c3248;
-            --bg-btn-sec-hover: #363d56;
-            --bg-btn-danger: #1e2130;
-            --text-main:     #e0e6f0;
-            --text-sub:      #c0c8d8;
-            --text-th:       #a0aabf;
-            --text-btn-sec:  #a0aabf;
-            --border-card:   #2c3248;
-            --border-table:  #3a4260;
-            --border-row:    #2c3248;
-            --border-card-h2: #2c3248;
-            --border-history: #2c3248;
-            --shadow-card:   0 2px 12px rgba(0,0,0,0.35);
-            --accent:        #4d9ef7;
-            --accent-dark:   #76b5fa;
-            --danger:        #f28b82;
-            --danger-bg-hover: #3a1e1c;
-            --toggle-icon:   '☀️';
+            --bg-page: #090b0c;
+            --bg-page-glow-a: rgba(197, 168, 114, 0.12);
+            --bg-page-glow-b: rgba(127, 94, 52, 0.10);
+            --bg-overlay-top: rgba(255,248,232,0.04);
+            --bg-overlay-wash: rgba(217,196,160,0.03);
+            --bg-card: rgba(20, 18, 17, 0.76);
+            --bg-card-strong: #12100f;
+            --bg-table-head: #1b1715;
+            --bg-row-even: #141210;
+            --bg-total-row: #201a15;
+            --bg-history-span: #191512;
+            --bg-btn-sec: #181513;
+            --bg-btn-sec-hover: #231d19;
+            --bg-btn-danger: #12100f;
+            --text-main: #f5efe5;
+            --text-sub: #cabca9;
+            --text-muted: #988a78;
+            --text-th: #afa18f;
+            --text-btn-sec: #ebdfd0;
+            --border-card: rgba(194, 170, 137, 0.16);
+            --border-table: #302821;
+            --border-row: #241f1a;
+            --border-card-h2: #2b241d;
+            --border-history: #2b241d;
+            --shadow-card: 0 30px 90px rgba(0, 0, 0, 0.45);
+            --shadow-soft: 0 18px 36px rgba(0, 0, 0, 0.28);
+            --accent: #7d5f37;
+            --accent-dark: #5f4627;
+            --accent-strong: #d8bd8a;
+            --accent-bright: #f2d6a2;
+            --danger: #f1b97c;
+            --danger-bg-hover: #35261a;
+            --focus-ring: rgba(242, 214, 162, 0.14);
+            --metal-line: linear-gradient(90deg, rgba(255,248,232,0.24), rgba(255,248,232,0.04) 35%, rgba(242,214,162,0.08) 100%);
+            --hero-sheen: linear-gradient(135deg, rgba(255,248,232,0.14), rgba(255,248,232,0.02) 38%, rgba(125,95,55,0.10) 100%);
+            --pill-bg: rgba(255,248,232,0.08);
+            --pill-border: rgba(242,214,162,0.16);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', '맑은 고딕', sans-serif;
-            background: var(--bg-page);
+            font-family: "Pretendard Variable", "SUIT Variable", "Segoe UI", "맑은 고딕", sans-serif;
+            background:
+                radial-gradient(circle at top left, var(--bg-overlay-top), transparent 28%),
+                linear-gradient(180deg, var(--bg-overlay-wash), rgba(255,255,255,0)),
+                var(--bg-page);
             color: var(--text-main);
-            padding: 16px;
-            max-width: 720px;
+            padding: 28px 18px 56px;
+            max-width: 980px;
             margin: 0 auto;
             transition: background 0.25s, color 0.25s;
+            line-height: 1.5;
+            position: relative;
+        }
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: auto;
+            width: 320px;
+            height: 320px;
+            border-radius: 999px;
+            filter: blur(28px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        body::before {
+            top: -100px;
+            left: -120px;
+            background: var(--bg-page-glow-a);
+        }
+        body::after {
+            right: -140px;
+            top: 180px;
+            background: var(--bg-page-glow-b);
+        }
+
+        .app-shell {
+            display: grid;
+            gap: 20px;
         }
 
         /* ── 헤더 ── */
         .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) auto;
+            gap: 18px;
+            align-items: start;
+            padding: 26px 28px;
+            border: 1px solid var(--border-card);
+            border-radius: 28px;
+            background:
+                var(--hero-sheen),
+                linear-gradient(145deg, var(--bg-card-strong), var(--bg-card));
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(18px);
             position: relative;
-            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .page-header::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--metal-line);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .header-copy {
+            display: grid;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+        .eyebrow {
+            display: inline-flex;
+            width: fit-content;
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: var(--pill-bg);
+            color: var(--accent-bright);
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            border: 1px solid var(--pill-border);
+            backdrop-filter: blur(8px);
         }
         h1 {
-            color: var(--accent);
-            font-size: 1.5rem;
+            color: var(--text-main);
+            font-size: clamp(2rem, 4vw, 2.9rem);
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            font-weight: 800;
+        }
+        .page-header p {
+            max-width: none;
+            color: var(--text-sub);
+            font-size: 0.96rem;
+            line-height: 1.7;
+            margin-top: 6px;
+            text-wrap: pretty;
+            word-break: keep-all;
         }
         #themeToggle {
-            position: absolute;
-            right: 0;
             background: var(--bg-btn-sec);
             border: 1.5px solid var(--border-table);
-            border-radius: 8px;
-            padding: 6px 10px;
+            border-radius: 16px;
+            padding: 11px 13px;
             font-size: 1.1rem;
             cursor: pointer;
             line-height: 1;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(12px);
         }
-        #themeToggle:hover { background: var(--bg-btn-sec-hover); }
+        #themeToggle:hover {
+            background: var(--bg-btn-sec-hover);
+            transform: translateY(-1px);
+        }
 
         /* ── 카드 ── */
         .card {
-            background: var(--bg-card);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02)),
+                linear-gradient(160deg, var(--bg-card-strong), var(--bg-card));
             border: 1px solid var(--border-card);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
+            border-radius: 26px;
+            padding: 28px;
             box-shadow: var(--shadow-card);
-            transition: background 0.25s, border-color 0.25s;
+            transition: background 0.25s, border-color 0.25s, transform 0.2s;
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 1px;
+            background: var(--metal-line);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .card:hover {
+            transform: translateY(-1px);
         }
         .card h2 {
-            font-size: 1.1rem;
-            color: var(--text-sub);
+            font-size: 1.05rem;
+            color: var(--text-main);
             margin-bottom: 14px;
-            border-bottom: 2px solid var(--border-card-h2);
-            padding-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-card-h2);
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-weight: 800;
+            line-height: 1.35;
         }
 
         /* ── 통합 금액 ── */
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: auto -30px -55px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(242, 214, 162, 0.14), rgba(242, 214, 162, 0));
+            pointer-events: none;
+        }
+        .hero-card .card-lead {
+            margin: 2px 0 18px;
+            color: var(--text-sub);
+            font-size: 0.96rem;
+            line-height: 1.7;
+            max-width: none;
+            word-break: keep-all;
+        }
         .total-input {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 16px 18px;
+            border: 1px solid var(--border-table);
+            border-radius: 20px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.44), rgba(255,255,255,0.16)),
+                rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(10px);
         }
-        .total-input label { font-weight: 600; white-space: nowrap; }
+        [data-theme="dark"] .total-input {
+            background:
+                linear-gradient(180deg, rgba(255,248,232,0.06), rgba(255,248,232,0.02)),
+                rgba(255, 248, 232, 0.02);
+        }
+        .total-input label {
+            font-weight: 700;
+            white-space: nowrap;
+            color: var(--text-sub);
+            letter-spacing: 0.01em;
+        }
         .total-input input {
             flex: 1;
-            padding: 10px 12px;
-            border: 2px solid var(--border-table);
-            border-radius: 8px;
-            font-size: 1.1rem;
+            min-width: 0;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border-table);
+            border-radius: 14px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
             text-align: right;
-            background: var(--bg-card);
+            background: var(--bg-card-strong);
             color: var(--text-main);
             transition: background 0.25s, border-color 0.2s;
+            font-variant-numeric: tabular-nums;
         }
         .total-input input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(77,158,247,0.2);
+            box-shadow: 0 0 0 4px var(--focus-ring);
         }
-        .total-input span { font-weight: 600; }
+        .total-input span {
+            font-weight: 700;
+            color: var(--text-sub);
+            min-width: 1.5em;
+            text-align: right;
+        }
+        .bill-korean {
+            margin-top: 4px;
+            min-height: 1.5em;
+            font-size: 0.92rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--accent-bright);
+            letter-spacing: 0.01em;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 10px;
+        }
+        .bill-korean::before,
+        .bill-korean::after {
+            content: "";
+        }
+        .bill-korean::after {
+            width: 1.5em;
+        }
+        .bill-korean.has-value {
+            text-align: right;
+        }
 
         /* ── 입력 테이블 ── */
+        .section-note {
+            margin: 2px 0 18px;
+            color: var(--text-muted);
+            font-size: 0.96rem;
+            line-height: 1.7;
+            word-break: keep-all;
+        }
+        .table-shell {
+            overflow-x: auto;
+            border: 1px solid var(--border-table);
+            border-radius: 20px;
+            background: var(--bg-card-strong);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+        }
         .shop-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 560px;
         }
         .shop-table th {
             background: var(--bg-table-head);
-            padding: 8px 6px;
-            font-size: 0.85rem;
+            padding: 14px 10px;
+            font-size: 0.9rem;
             color: var(--text-th);
             text-align: center;
-            border-bottom: 2px solid var(--border-table);
+            border-bottom: 1px solid var(--border-table);
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
         .shop-table td {
-            padding: 8px 4px;
+            padding: 14px 8px;
             text-align: center;
             border-bottom: 1px solid var(--border-row);
+            vertical-align: middle;
         }
         .shop-table .shop-name {
-            font-weight: 600;
-            text-align: center;
+            font-weight: 700;
+            text-align: left;
             white-space: nowrap;
+            padding-left: 16px;
+            font-size: 0.97rem;
+            letter-spacing: -0.01em;
         }
         .shop-table input {
             width: 100%;
-            max-width: 100px;
-            padding: 6px 8px;
+            max-width: 112px;
+            padding: 11px 10px;
             border: 1.5px solid var(--border-table);
-            border-radius: 6px;
-            font-size: 0.95rem;
+            border-radius: 12px;
+            font-size: 0.98rem;
+            font-weight: 700;
             text-align: right;
-            background: var(--bg-card);
+            background: var(--bg-card-strong);
             color: var(--text-main);
             transition: background 0.25s, border-color 0.2s;
+            font-variant-numeric: tabular-nums;
         }
         .shop-table input.prev-input {
             background: var(--bg-row-even);
-            color: var(--text-th);
+            color: var(--text-sub);
         }
         .shop-table input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(77,158,247,0.2);
+            box-shadow: 0 0 0 4px var(--focus-ring);
         }
 
         /* ── 버튼 ── */
         .btn-row {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 16px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .btn-row-calc {
-            margin-top: 16px;
+            margin-top: 20px;
         }
         .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
+            min-height: 48px;
+            padding: 13px 18px;
+            border: 1px solid transparent;
+            border-radius: 16px;
+            font-size: 0.96rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+            letter-spacing: -0.01em;
         }
         .btn-primary {
-            background: var(--accent);
-            color: #fff;
+            background: linear-gradient(180deg, var(--accent-bright), var(--accent));
+            color: #17120e;
             flex: 1;
+            min-width: 180px;
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
         }
-        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
         .btn-secondary {
             background: var(--bg-btn-sec);
             color: var(--text-btn-sec);
+            border-color: var(--border-table);
         }
-        .btn-secondary:hover { background: var(--bg-btn-sec-hover); }
+        .btn-secondary:hover {
+            background: var(--bg-btn-sec-hover);
+            transform: translateY(-1px);
+        }
         .btn-danger {
             background: var(--bg-btn-danger);
             color: var(--danger);
             border: 1.5px solid var(--danger);
         }
-        .btn-danger:hover { background: var(--danger-bg-hover); }
+        .btn-danger:hover {
+            background: var(--danger-bg-hover);
+            transform: translateY(-1px);
+        }
 
         /* ── 결과 테이블 ── */
         .result-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            min-width: 640px;
         }
         .result-table th {
-            background: var(--accent);
+            background: linear-gradient(180deg, var(--accent-bright), var(--accent));
             color: #fff;
-            padding: 10px 6px;
-            font-size: 0.85rem;
+            padding: 14px 8px;
+            font-size: 0.9rem;
             text-align: center;
+            letter-spacing: 0.01em;
         }
         .result-table td {
-            padding: 10px 6px;
+            padding: 14px 8px;
             text-align: center;
             border-bottom: 1px solid var(--border-row);
+            vertical-align: middle;
         }
         .result-table .shop-name {
-            font-weight: 600;
-            text-align: center;
+            font-weight: 700;
+            text-align: left;
+            padding-left: 16px;
+            font-size: 0.97rem;
+            letter-spacing: -0.01em;
         }
         .result-table tr:nth-child(even) { background: var(--bg-row-even); }
         .result-table .total-row {
@@ -254,84 +502,152 @@
             font-weight: 700;
         }
         .result-table .amount {
-            color: var(--accent);
+            color: var(--accent-bright);
             font-weight: 800;
-            font-size: 1.2rem;
+            font-size: 1.22rem;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        .result-table td:nth-child(4) {
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
         }
         .hidden { display: none; }
 
         /* ── 결과 카드 강조 ── */
         #resultCard {
             border: 2px solid var(--accent);
+            box-shadow: 0 28px 72px rgba(0, 0, 0, 0.32);
         }
 
         /* ── 이력 ── */
         .history-item {
-            padding: 12px;
+            padding: 16px;
             border: 1px solid var(--border-history);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 18px;
+            margin-bottom: 12px;
             font-size: 0.9rem;
+            line-height: 1.6;
+            background: var(--bg-card-strong);
         }
         .history-item .date {
             font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 6px;
+            color: var(--accent-strong);
+            margin-bottom: 10px;
+            line-height: 1.5;
         }
         .history-detail {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 4px;
+            gap: 8px;
         }
         .history-detail span {
             display: flex;
             justify-content: space-between;
-            padding: 2px 6px;
+            padding: 7px 10px;
             background: var(--bg-history-span);
-            border-radius: 4px;
+            border-radius: 8px;
+            gap: 10px;
         }
         .no-history { color: var(--text-th); text-align: center; padding: 20px; }
+        .result-actions,
+        .history-actions {
+            margin-top: 18px;
+        }
 
         /* ── 반응형 ── */
+        @media (max-width: 768px) {
+            body {
+                padding: 18px 12px 40px;
+            }
+            .app-shell {
+                gap: 16px;
+            }
+            .page-header {
+                grid-template-columns: minmax(0, 1fr);
+                padding: 22px 20px;
+            }
+            #themeToggle {
+                justify-self: end;
+            }
+            .card {
+                padding: 22px 20px;
+            }
+        }
         @media (max-width: 480px) {
-            body { padding: 10px; }
-            h1 { font-size: 1.3rem; }
-            .shop-table input { max-width: 80px; font-size: 0.85rem; padding: 5px 4px; }
-            .shop-table th, .shop-table td { padding: 6px 2px; font-size: 0.8rem; }
-            .result-table th, .result-table td { padding: 8px 3px; font-size: 0.8rem; }
+            body { padding: 12px 10px 32px; }
+            h1 { font-size: 1.7rem; }
+            .total-input {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                align-items: center;
+            }
+            .total-input label {
+                grid-column: 1 / -1;
+            }
+            .page-header p,
+            .hero-card .card-lead,
+            .section-note {
+                font-size: 0.92rem;
+                line-height: 1.65;
+            }
+            .bill-korean {
+                grid-template-columns: 1fr auto;
+            }
+            .bill-korean::before {
+                display: none;
+            }
+            .shop-table input { max-width: 88px; font-size: 0.88rem; padding: 8px 8px; }
+            .shop-table th, .shop-table td { padding: 10px 6px; font-size: 0.8rem; }
+            .result-table th, .result-table td { padding: 10px 6px; font-size: 0.8rem; }
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="app-shell">
     <div class="page-header">
-        <h1>수도세 계산기</h1>
-        <button id="themeToggle" title="다크/라이트 모드 전환">🌙</button>
+        <div class="header-copy">
+            <span class="eyebrow">MONTHLY WATER BILL</span>
+            <div>
+                <h1>수도세 계산기</h1>
+                <p>업소별 계량기 수치를 입력하면 사용량 비율을 기준으로 총 청구 금액이 자동 계산됩니다.</p>
+            </div>
+        </div>
+        <button id="themeToggle" title="다크/라이트 모드 전환" aria-label="다크 또는 라이트 모드 전환">🌙</button>
     </div>
 
     <!-- 통합 금액 입력 -->
-    <div class="card">
+    <div class="card hero-card">
         <h2>통합 수도세</h2>
+        <p class="card-lead">이번 달 실제 납부 금액을 입력하면 사용량 비율을 기준으로 분담 금액이 자동 계산됩니다.</p>
         <div class="total-input">
             <label for="totalBill">납부 금액</label>
             <input type="text" id="totalBill" placeholder="0" inputmode="numeric">
             <span>원</span>
         </div>
-        <div id="billKorean" style="margin-top:6px; font-size:0.9rem; color:var(--accent); min-height:1.2em; text-align:right;"></div>
+        <div id="billKorean" class="bill-korean"></div>
     </div>
 
     <!-- 업소별 계량기 입력 -->
     <div class="card">
         <h2>업소별 계량기 수치</h2>
-        <table class="shop-table">
-            <thead>
-                <tr>
-                    <th>업소명</th>
-                    <th id="thPrevMonth"></th>
-                    <th id="thCurrMonth"></th>
-                </tr>
-            </thead>
-            <tbody id="shopInputs"></tbody>
-        </table>
+        <p class="section-note">이전 달과 이번 달 계량기 수치를 입력하면 사용량 비율을 기준으로 금액이 자동 계산됩니다.</p>
+        <div class="table-shell">
+            <table class="shop-table">
+                <thead>
+                    <tr>
+                        <th>업소명</th>
+                        <th id="thPrevMonth"></th>
+                        <th id="thCurrMonth"></th>
+                    </tr>
+                </thead>
+                <tbody id="shopInputs"></tbody>
+            </table>
+        </div>
         <div class="btn-row btn-row-calc">
             <button class="btn btn-primary" id="btnCalculate">계산하기</button>
         </div>
@@ -344,19 +660,22 @@
     <!-- 계산 결과 -->
     <div class="card hidden" id="resultCard">
         <h2>계산 결과</h2>
-        <table class="result-table">
-            <thead>
-                <tr>
-                    <th>업소명</th>
-                    <th id="resPrevMonth"></th>
-                    <th id="resCurrMonth"></th>
-                    <th>사용량</th>
-                    <th>부담금</th>
-                </tr>
-            </thead>
-            <tbody id="resultBody"></tbody>
-        </table>
-        <div class="btn-row" style="margin-top:12px;">
+        <p class="section-note">계산 결과는 각 업소의 사용량 비율을 기준으로 반영됩니다.</p>
+        <div class="table-shell">
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>업소명</th>
+                        <th id="resPrevMonth"></th>
+                        <th id="resCurrMonth"></th>
+                        <th>사용량</th>
+                        <th>부담금</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody"></tbody>
+            </table>
+        </div>
+        <div class="btn-row result-actions">
             <button class="btn btn-secondary" id="btnSave">저장하고 다음달 적용</button>
         </div>
     </div>
@@ -365,9 +684,10 @@
     <div class="card hidden" id="historyCard">
         <h2>계산 이력</h2>
         <div id="historyList"></div>
-        <div class="btn-row" style="margin-top:10px;">
+        <div class="btn-row history-actions">
             <button class="btn btn-danger" id="btnClearHistory">이력 전체 삭제</button>
         </div>
+    </div>
     </div>
 
     <script>
@@ -407,8 +727,10 @@
         function formatTotalBill(input) {
             const raw = input.value.replace(/[^0-9]/g, '');
             const num = raw ? parseInt(raw) : 0;
+            const billKorean = document.getElementById('billKorean');
             input.value = num ? num.toLocaleString() : '';
-            document.getElementById('billKorean').textContent = num ? numberToKorean(num) : '';
+            billKorean.textContent = num ? numberToKorean(num) : '';
+            billKorean.classList.toggle('has-value', !!num);
         }
 
         const SHOPS = ['이조갈비', '뽑기', '참치', '따개', '송자네', '또래오래'];
@@ -434,7 +756,7 @@
             const saved = localStorage.getItem(THEME_KEY);
             if (saved) {
                 applyTheme(saved);
-            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            } else {
                 applyTheme('dark');
             }
         })();
