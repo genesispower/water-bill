@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
     <title>수도세 계산기</title>
     <style>
         /* ── CSS 변수 (라이트 모드) ── */
@@ -304,7 +305,7 @@
 <body>
     <div class="page-header">
         <h1>수도세 계산기</h1>
-        <button id="themeToggle" onclick="toggleTheme()" title="다크/라이트 모드 전환">🌙</button>
+        <button id="themeToggle" title="다크/라이트 모드 전환">🌙</button>
     </div>
 
     <!-- 통합 금액 입력 -->
@@ -312,7 +313,7 @@
         <h2>통합 수도세</h2>
         <div class="total-input">
             <label for="totalBill">납부 금액</label>
-            <input type="text" id="totalBill" placeholder="0" inputmode="numeric" oninput="formatTotalBill(this)">
+            <input type="text" id="totalBill" placeholder="0" inputmode="numeric">
             <span>원</span>
         </div>
         <div id="billKorean" style="margin-top:6px; font-size:0.9rem; color:var(--accent); min-height:1.2em; text-align:right;"></div>
@@ -332,11 +333,11 @@
             <tbody id="shopInputs"></tbody>
         </table>
         <div class="btn-row btn-row-calc">
-            <button class="btn btn-primary" onclick="calculate()">계산하기</button>
+            <button class="btn btn-primary" id="btnCalculate">계산하기</button>
         </div>
         <div class="btn-row">
-            <button class="btn btn-secondary" onclick="toggleHistory()">이력 보기</button>
-            <button class="btn btn-danger" onclick="resetAll()">초기화</button>
+            <button class="btn btn-secondary" id="btnHistory">이력 보기</button>
+            <button class="btn btn-danger" id="btnReset">초기화</button>
         </div>
     </div>
 
@@ -356,7 +357,7 @@
             <tbody id="resultBody"></tbody>
         </table>
         <div class="btn-row" style="margin-top:12px;">
-            <button class="btn btn-secondary" onclick="saveAndApply()">저장하고 다음달 적용</button>
+            <button class="btn btn-secondary" id="btnSave">저장하고 다음달 적용</button>
         </div>
     </div>
 
@@ -365,11 +366,21 @@
         <h2>계산 이력</h2>
         <div id="historyList"></div>
         <div class="btn-row" style="margin-top:10px;">
-            <button class="btn btn-danger" onclick="clearHistory()">이력 전체 삭제</button>
+            <button class="btn btn-danger" id="btnClearHistory">이력 전체 삭제</button>
         </div>
     </div>
 
     <script>
+        // ── HTML 이스케이프 (XSS 방지) ──
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         function numberToKorean(num) {
             if (!num || num === 0) return '';
             const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
@@ -404,6 +415,7 @@
         const STORAGE_KEY = 'waterBill_prevReadings';
         const HISTORY_KEY = 'waterBill_history';
         const THEME_KEY   = 'waterBill_theme';
+        let lastCalc = null;
 
         // ── 다크/라이트 모드 ──
         function applyTheme(theme) {
@@ -437,8 +449,13 @@
 
         // ── 이전 달 데이터 로드 ──
         function loadPrevReadings() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            return data ? JSON.parse(data) : {};
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : {};
+            } catch (e) {
+                localStorage.removeItem(STORAGE_KEY);
+                return {};
+            }
         }
 
         // ── 입력 폼 생성 ──
@@ -453,8 +470,8 @@
             tbody.innerHTML = SHOPS.map(shop => `
                 <tr>
                     <td class="shop-name">${shop}</td>
-                    <td><input type="number" id="prev_${shop}" value="${prev[shop] || ''}" placeholder="0" min="0" step="1" class="prev-input" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
-                    <td><input type="number" id="curr_${shop}" placeholder="0" min="0" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td>
+                    <td><input type="number" id="prev_${shop}" value="${prev[shop] || ''}" placeholder="0" min="0" step="1" class="prev-input"></td>
+                    <td><input type="number" id="curr_${shop}" placeholder="0" min="0" step="1"></td>
                 </tr>
             `).join('');
         }
@@ -520,20 +537,22 @@
 
             resultBody.innerHTML = html;
             document.getElementById('resultCard').classList.remove('hidden');
-            window._lastCalc = { readings, totalBill, totalUsage };
+            lastCalc = { readings, totalBill, totalUsage };
         }
 
         // ── 저장 및 다음 달 이전 수치로 적용 ──
         function saveAndApply() {
-            if (!window._lastCalc) return;
+            if (!lastCalc) return;
 
-            const { readings, totalBill, totalUsage } = window._lastCalc;
+            const { readings, totalBill, totalUsage } = lastCalc;
 
             const newPrev = {};
             readings.forEach(r => { newPrev[r.shop] = r.curr; });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(newPrev));
 
-            const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            let history;
+            try { history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+            catch (e) { history = []; localStorage.removeItem(HISTORY_KEY); }
             history.unshift({
                 date: new Date().toLocaleDateString('ko-KR'),
                 totalBill,
@@ -563,7 +582,9 @@
         }
 
         function renderHistory() {
-            const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            let history;
+            try { history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+            catch (e) { history = []; localStorage.removeItem(HISTORY_KEY); }
             const container = document.getElementById('historyList');
 
             if (history.length === 0) {
@@ -573,9 +594,9 @@
 
             container.innerHTML = history.map(h => `
                 <div class="history-item">
-                    <div class="date">${h.date} | 총 ${h.totalBill.toLocaleString()}원 | 사용량 ${h.totalUsage.toLocaleString()}</div>
+                    <div class="date">${escapeHtml(h.date)} | 총 ${escapeHtml(h.totalBill.toLocaleString())}원 | 사용량 ${escapeHtml(h.totalUsage.toLocaleString())}</div>
                     <div class="history-detail">
-                        ${h.details.map(d => `<span><b>${d.shop}</b> ${d.amount.toLocaleString()}원</span>`).join('')}
+                        ${h.details.map(d => `<span><b>${escapeHtml(d.shop)}</b> ${escapeHtml(d.amount.toLocaleString())}원</span>`).join('')}
                     </div>
                 </div>
             `).join('');
@@ -601,6 +622,22 @@
                 alert('초기화되었습니다.');
             }
         }
+
+        // ── 이벤트 리스너 등록 ──
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('totalBill').addEventListener('input', function() { formatTotalBill(this); });
+        document.getElementById('btnCalculate').addEventListener('click', calculate);
+        document.getElementById('btnHistory').addEventListener('click', toggleHistory);
+        document.getElementById('btnReset').addEventListener('click', resetAll);
+        document.getElementById('btnSave').addEventListener('click', saveAndApply);
+        document.getElementById('btnClearHistory').addEventListener('click', clearHistory);
+
+        // 계량기 입력 이벤트 위임
+        document.getElementById('shopInputs').addEventListener('input', function(e) {
+            if (e.target.tagName === 'INPUT') {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }
+        });
 
         // ── 초기 렌더링 ──
         renderInputs();
